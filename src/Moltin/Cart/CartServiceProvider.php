@@ -22,7 +22,7 @@
 namespace Moltin\Cart;
 
 use Illuminate\Support\ServiceProvider;
-use Moltin\Cart\Storage\Session as SessionStore;
+use Moltin\Cart\Storage\LaravelSession as SessionStore;
 use Moltin\Cart\Identifier\Cookie as CookieIdentifier;
 
 class CartServiceProvider extends ServiceProvider
