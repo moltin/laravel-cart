@@ -28,6 +28,11 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
     protected $identifier;
     protected static $cart = array();
 
+    public function restore()
+    {
+    	static::$cart = Session::get('cart');
+    }
+
     /**
      * Add or update an item in the cart
      * 
