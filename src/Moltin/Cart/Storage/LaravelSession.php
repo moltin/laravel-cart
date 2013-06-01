@@ -30,11 +30,13 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     public function restore()
     {
-        $contents = Session::get('cart');
+        $carts = Session::get('cart');
 
-        foreach ($contents as $item) {
-            $this->insertUpdate(new Item($item));
+        foreach ($carts as &$cart) {
+            foreach ($cart as &$item) $item = new Item($item);
         }
+
+        static::$cart = $carts;
     }
 
     /**
