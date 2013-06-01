@@ -176,6 +176,12 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     protected function saveCart()
     {
-        Session::put('cart', $this->data(true));
+        $data = static::$cart;
+
+        foreach ($data as &$cart) {
+            foreach ($cart as &$item) $item = $item->toArray();
+        }
+
+        Session::put('cart', $data);
     }
 }
