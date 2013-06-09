@@ -32,11 +32,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
     {
         $carts = Session::get('cart');
 
-        foreach ($carts as &$cart) {
-            foreach ($cart as &$item) $item = new Item($item);
-        }
-
-        static::$cart = $carts;
+        if ($carts) static::$cart = $carts;
     }
 
     /**
@@ -177,10 +173,6 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
     protected function saveCart()
     {
         $data = static::$cart;
-
-        foreach ($data as &$cart) {
-            foreach ($cart as &$item) $item = $item->toArray();
-        }
 
         Session::put('cart', $data);
     }
