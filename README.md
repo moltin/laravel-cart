@@ -22,11 +22,11 @@ You should then be good to go and be able to access the cart using the following
 ```php
 //Format array of required info for item to be added to basket...
 $items = array(
-    	'id' => 1,
-			'name' => 'Juicy Picnic Hamper',
-			'price' => 120.00,
-			'quantity' => 1
-		);
+	'id' => 1,
+	'name' => 'Juicy Picnic Hamper',
+	'price' => 120.00,
+	'quantity' => 1
+);
 
 //Make the insert...
 Cart::insert($items);
