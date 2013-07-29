@@ -42,7 +42,7 @@ the price of the item.
 In the below example we will use 20% for the tax rate.
 
 ```php
-$cart->insert(array(
+Cart::insert(array(
     'id'       => 'foo',
     'name'     => 'bar',
     'price'    => 100,
@@ -55,7 +55,7 @@ $cart->insert(array(
 You can update items in your cart by updating any property on a cart item. For example, if you were within a
 cart loop then you can update a specific item using the below example.
 ```php
-foreach ($cart->contents() as $item) {
+foreach (Cart::contents() as $item) {
     $item->name = 'Foo';
     $item->quantity = 1;
 }
@@ -64,7 +64,7 @@ foreach ($cart->contents() as $item) {
 ### Removing cart items
 You can remove any items in your cart by using the ```remove()``` method on any cart item.
 ```php
-foreach ($cart->contents() as $item) {
+foreach (Cart::contents() as $item) {
     $item->remove();
 }
 ```
@@ -72,29 +72,29 @@ foreach ($cart->contents() as $item) {
 ### Destroying/emptying the cart
 You can completely empty/destroy the cart by using the ```destroy()``` method.
 ```php
-$cart->destroy()
+Cart::destroy()
 ```
 
 ### Retrieve the cart contents
 You can loop the cart contents by using the following method
 ```php
-$cart->contents();
+Cart::contents();
 ```
 
 You can also return the cart items as an array by passing true as the first argument
 ```php
-$cart->contents(true);
+Cart::contents(true);
 ```
 
 ### Retrieving the total items in the cart
 ```php
-$cart->totalItems();
+Cart::totalItems();
 ```
 
 By default this method will return all items in the cart as well as their quantities. You can pass ```true```
 as the first argument to get all unique items.
 ```php
-$cart->totalItems(true);
+Cart::totalItems(true);
 ```
 
 ### Retrieving the cart total
@@ -106,17 +106,17 @@ By default the ```total()``` method will return the total value of the cart as a
 any item taxes. If you want to retrieve the cart total without tax then you can do so by passing false to the
 ```total()``` method
 ```php
-$cart->total(false);
+Cart::total(false);
 ```
 
 ### Check if the cart has an item
 ```php
-$cart->has($itemIdentifier);
+Cart::has($itemIdentifier);
 ```
 
 ### Retreive an item object by identifier
 ```php
-$cart->item($itemIdentifier);
+Cart::item($itemIdentifier);
 ```
 
 ## Cart items
@@ -125,7 +125,7 @@ There are several features of the cart items that may also help when integrating
 ### Retrieving the total value of an item
 You can retrieve the total value of a specific cart item (including quantities) using the following method.
 ```php
-$item->total();
+Cart::total();
 ```
 
 By default, this method will return the total value of the item plus tax. So if you had a product which costs 100,
@@ -133,7 +133,7 @@ with a quantity of 2 and a tax rate of 20% then the total returned by this metho
 
 You can also get the total minus tax by passing false to the ```total()``` method.
 ```php
-$item->total(false);
+Cart::total(false);
 ```
 
 This would return 200.
