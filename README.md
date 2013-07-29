@@ -1,4 +1,4 @@
-laravel-cart
+Laravel Shopping Cart Package
 ============
 
 Laravel Facade and Service Provider for Moltin\Cart
