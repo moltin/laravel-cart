@@ -22,15 +22,48 @@
 namespace Moltin\Cart;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Config;
+
 use Moltin\Cart\Storage\LaravelSession as SessionStore;
+use Moltin\Cart\Storage\LaravelCache as CacheStore;
 use Moltin\Cart\Identifier\Cookie as CookieIdentifier;
+use Moltin\Cart\Identifier\RequestCookie as CookieRequestIdentifier;
 
 class CartServiceProvider extends ServiceProvider
 {
+    private function getStorageService()
+    {
+        switch(Config::get('moltincart.storage', 'session'))
+        {
+            case 'cache':
+                return new CacheStore;
+                break;
+            default:
+            case 'session':
+                return new SessionStore;
+                break;
+        }
+    }
+
+    private function getIdentifierService()
+    {
+        switch(Config::get('moltincart.identifier', 'cookie'))
+        {
+            case 'requestcookie':
+                return new CookieRequestIdentifier;
+                break;
+            default:
+            case 'cookie':
+                return new CookieIdentifier;
+                break;
+        }
+    }
+
     public function register()
     {
+
         $this->app->singleton('cart', function() {
-            return new Cart(new SessionStore, new CookieIdentifier);
+            return new Cart($this->getStorageService(), $this->getIdentifierService());
         });
     }
 }
