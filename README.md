@@ -20,7 +20,7 @@ Then add to the aliases array the following:
 You should then be good to go and be able to access the cart using the following static interface:
 
 ```php
-//Format array of required info for item to be added to basket...
+// Format array of required info for item to be added to basket...
 $items = array(
 	'id' => 1,
 	'name' => 'Juicy Picnic Hamper',
@@ -28,10 +28,10 @@ $items = array(
 	'quantity' => 1
 );
 
-//Make the insert...
+// Make the insert...
 Cart::insert($items);
 
-//Let's see what we have got in their...
+// Let's see what we have have in there...
 dd(Cart::totalItems());
 ```
 
