@@ -148,7 +148,7 @@ There are several features of the cart items that may also help when integrating
 ### Retrieving the total value of an item
 You can retrieve the total value of a specific cart item (including quantities) using the following method.
 ```php
-Cart::total();
+$item->total();
 ```
 
 By default, this method will return the total value of the item plus tax. So if you had a product which costs 100,
@@ -156,7 +156,7 @@ with a quantity of 2 and a tax rate of 20% then the total returned by this metho
 
 You can also get the total minus tax by passing false to the ```total()``` method.
 ```php
-Cart::total(false);
+$item->total(false);
 ```
 
 This would return 200.
