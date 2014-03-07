@@ -31,7 +31,7 @@ use Moltin\Cart\Identifier\RequestCookie as CookieRequestIdentifier;
 
 class CartServiceProvider extends ServiceProvider
 {
-    private function getStorageService()
+    public function getStorageService()
     {
         switch(Config::get('moltincart.storage', 'session'))
         {
@@ -45,7 +45,7 @@ class CartServiceProvider extends ServiceProvider
         }
     }
 
-    private function getIdentifierService()
+    public function getIdentifierService()
     {
         switch(Config::get('moltincart.identifier', 'cookie'))
         {
