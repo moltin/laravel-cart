@@ -1,43 +1,42 @@
-<?php
-
+<?php namespace Moltin\Cart\LaravelStorage;
 /**
- * This file is part of Moltin Cart, a PHP package to handle
- * your shopping basket.
- *
- * Copyright (c) 2013 Moltin Ltd.
- * http://github.com/moltin/cart
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package moltin/cart
- * @author Chris Harvey <chris@molt.in>
- * @copyright 2013 Moltin Ltd.
- * @version dev
- * @link http://github.com/moltin/cart
- *
+ * Class LaravelCache
+ * @package Moltin\Cart\Storage
+ * @author Theo den Hollander <theo@hollandware.com>
  */
 
-namespace Moltin\Cart\Storage;
-
 use Moltin\Cart\Item;
-use Session;
+use Moltin\Cart\Storage;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache as LaravelCacheStorage;
 
-class LaravelSession implements \Moltin\Cart\StorageInterface
+class LaravelCache implements \Moltin\Cart\StorageInterface
 {
+    private $cachePrefix;
+
     protected $identifier;
+
     protected static $cart = array();
 
-    public function restore()
+
+    public function __construct()
     {
-        $carts = Session::get('cart');
+        $this->cachePrefix = Config::get('moltincart.cache_prefix', 'session');
+    }
+
+    /**
+     * @param $identifier
+     */
+    public function restore($identifier)
+    {
+        $carts = LaravelCacheStorage::get($this->cachePrefix . $identifier);
 
         if ($carts) static::$cart = $carts;
     }
 
     /**
      * Add or update an item in the cart
-     * 
+     *
      * @param  Item   $item The item to insert or update
      * @return void
      */
@@ -50,7 +49,8 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Retrieve the cart data
-     * 
+     *
+     * @param bool $asArray
      * @return array
      */
     public function &data($asArray = false)
@@ -70,8 +70,9 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Check if the item exists in the cart
-     * 
-     * @param  mixed  $id
+     *
+     * @param $identifier
+     * @internal param mixed $id
      * @return boolean
      */
     public function has($identifier)
@@ -87,7 +88,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Get a single cart item by id
-     * 
+     *
      * @param  mixed $id The item id
      * @return Item  The item class
      */
@@ -104,7 +105,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Returns the first occurance of an item with a given id
-     * 
+     *
      * @param  string $id The item id
      * @return Item       Item object
      */
@@ -118,10 +119,10 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
         return false;
     }
-    
+
     /**
      * Remove an item from the cart
-     * 
+     *
      * @param  mixed $id
      * @return void
      */
@@ -134,7 +135,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Destroy the cart
-     * 
+     *
      * @return void
      */
     public function destroy()
@@ -146,7 +147,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Set the cart identifier
-     * 
+     *
      * @param string $identifier
      */
     public function setIdentifier($id)
@@ -162,7 +163,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Return the current cart identifier
-     * 
+     *
      * @return void
      */
     public function getIdentifier()
@@ -174,6 +175,16 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
     {
         $data = static::$cart;
 
-        Session::put('cart', $data);
+        $expires = Config::get('moltincart.cache_expire', 60);
+        $cacheID = $this->cachePrefix . $this->id;
+
+        if($expires == -1)
+        {
+            LaravelCacheStorage::forever($cacheID, $data);
+        }
+        else
+        {
+            LaravelCacheStorage::put($cacheID, $data, $expires);
+        }
     }
 }
