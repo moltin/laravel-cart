@@ -61,9 +61,10 @@ class CartServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $that = $this;
 
-        $this->app->singleton('cart', function() {
-            return new Cart($this->getStorageService(), $this->getIdentifierService());
+        $this->app->singleton('cart', function() use ($that) {
+            return new Cart($that->getStorageService(), $that->getIdentifierService());
         });
     }
 }
