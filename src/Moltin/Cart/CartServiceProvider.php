@@ -33,28 +33,35 @@ class CartServiceProvider extends ServiceProvider
 {
     public function getStorageService()
     {
-        $class = Config::get('laravel-cart::moltincart.storage', 'session');
-
-        if (class_exists($class)) {
-            return new $class;
-        } elseif ($class == 'cache') {
-            return new CacheStore;
-        } else {
-            return new SessionStore;
+        switch ($this->app['config']->get('laravel-cart::moltincart.storage', 'session')) {
+            case 'session':
+                return new SessionStore;
+            break;
+            
+            case 'cache':
+                return new CacheStore;
+            break;
+            
+            default:
+                return $this->app->make($class);
+            break;
         }
     }
 
     public function getIdentifierService()
     {
-        switch(Config::get('laravel-cart::moltincart.identifier', 'cookie'))
-        {
+        switch ($this->app['config']->get('laravel-cart::moltincart.identifier', 'cookie')) {
             case 'requestcookie':
                 return new CookieRequestIdentifier;
-                break;
-            default:
+            break;
+
             case 'cookie':
                 return new CookieIdentifier;
-                break;
+            break;
+            
+            default:
+                return $this->app->make($class);
+            break;
         }
     }
 
