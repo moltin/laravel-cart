@@ -74,6 +74,8 @@ class CartServiceProvider extends ServiceProvider
         $this->app->singleton('cart', function() use ($that) {
             return new Cart($that->getStorageService(), $that->getIdentifierService());
         });
+
+        $this->app->alias('cart', 'Moltin\Cart\Cart');
     }
 
     /**
