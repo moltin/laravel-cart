@@ -36,7 +36,7 @@ dd(Cart::totalItems());
 ```
 
 ###Config settings (Optional)
-Add the file moltincart.php in the app/config folder
+Publish the config file with `php artisan vendor:publish`
 ```php
 
 return array(
