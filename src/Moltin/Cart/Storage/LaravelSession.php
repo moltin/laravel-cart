@@ -59,10 +59,10 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
         if ( ! $asArray) return $cart;
 
-        $data = $cart;
+        $data = [];
 
-        foreach ($data as &$item) {
-            $item = $item->toArray();
+        foreach ($cart as &$item) {
+            $data[] = $item->toArray();
         }
 
         return $data;
