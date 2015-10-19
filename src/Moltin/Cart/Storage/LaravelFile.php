@@ -77,7 +77,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     {
         $cart =& static::$cart[$this->id];
 
-        if (! $asArray) {
+        if ( ! $asArray) {
             return $cart;
         }
 
