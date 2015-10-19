@@ -193,6 +193,11 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         return $this->identifier;
     }
 
+    /**
+     * Save the cart to persistant storage
+     *
+     * @return void
+     */
     protected function saveCart()
     {
         $data = static::$cart;
