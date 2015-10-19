@@ -6,7 +6,7 @@
  *
  * @package moltin/cart
  * @author Alan Wynn <hello@alanwynn.me>
- * @link http://github.com/moltin/cart
+ * @link http://github.com/moltin/laravel-cart
  *
  */
 
