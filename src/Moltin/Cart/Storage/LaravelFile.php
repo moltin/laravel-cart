@@ -26,7 +26,8 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
 
     public function __construct()
     {
-        $this->storagePath = storage_path('Cart');
+        $folderName = Config::get('moltincart.storage_folder_name', 'Cart');
+        $this->storagePath = storage_path($folderName);
 
         if (!file_exists($this->storagePath)) {
             mkdir($this->storagePath, 0777, true);
