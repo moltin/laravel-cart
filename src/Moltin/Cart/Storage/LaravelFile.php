@@ -34,24 +34,25 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         }
     }
 
+    public function __destruct()
+    {
+        $this->saveCart();
+    }
+
     /**
      * @param $identifier
      */
     public function restore($identifier)
     {
         $contents = null;
-        $cartFilename = $this->storagePath . '/' . $identifier . '.json';
+        $cartFilename = $this->storagePath . '/' . $identifier;
 
         if (file_exists($cartFilename)) {
             $contents = file_get_contents($cartFilename);
         }
 
         if ( ! empty($contents)) {
-            $contents = json_decode($contents, true);
-        }
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            static::$cart = $contents;
+            static::$cart = unserialize($contents);
         }
     }
 
@@ -100,7 +101,9 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function has($identifier)
     {
-        foreach (static::$cart as $item) {
+        $data = static::$cart;
+
+        foreach ($data as $item) {
             if ($item->identifier == $identifier) {
                 return true;
             }
@@ -177,9 +180,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     {
         $this->identifier = $identifier;
 
-        if ( ! array_key_exists($this->identifier, (array)static::$cart)) {
-            static::$cart = array();
-        }
+        // Session::put("cart_identifier", $identifier);
 
         $this->saveCart();
     }
@@ -202,12 +203,10 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     protected function saveCart()
     {
         $data = static::$cart;
-        $cartFilename = $this->storagePath . '/' . $this->identifier . '.json';
+        $cartFilename = $this->storagePath . '/' . $this->identifier;
 
         if ( ! empty($data)) {
-            file_put_contents($cartFilename, json_encode($data));
-        } elseif (file_exists($cartFilename)) {
-            unlink($cartFilename);
+            file_put_contents($cartFilename, serialize($data));
         }
     }
 }
