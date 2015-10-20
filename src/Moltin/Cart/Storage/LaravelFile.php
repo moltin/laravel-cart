@@ -176,8 +176,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     public function setIdentifier($id)
     {
         $this->id = $id;
-
-        if (! array_key_exists($this->id, static::$cart)) {
+        if (! array_key_exists($this->id, (array)static::$cart)) {
             static::$cart[$this->id] = array();
         }
 
