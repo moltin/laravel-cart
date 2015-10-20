@@ -29,7 +29,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         $folderName = Config::get('moltincart.storage_folder_name', 'Cart');
         $this->storagePath = storage_path($folderName);
 
-        if (!file_exists($this->storagePath)) {
+        if  ( ! file_exists($this->storagePath)) {
             mkdir($this->storagePath, 0777, true);
         }
     }
@@ -46,7 +46,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
             $contents = file_get_contents($cartFilename);
         }
 
-        if (!empty($contents)) {
+        if ( ! empty($contents)) {
             $contents = json_decode($contents, true);
         }
 
@@ -176,7 +176,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     public function setIdentifier($id)
     {
         $this->id = $id;
-        if (! array_key_exists($this->id, (array)static::$cart)) {
+        if ( ! array_key_exists($this->id, (array)static::$cart)) {
             static::$cart[$this->id] = array();
         }
 
@@ -203,9 +203,9 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         $data = static::$cart;
         $cartFilename = $this->storagePath . '/' . $this->identifier . '.json';
 
-        if (!empty($data)) {
+        if ( ! empty($data)) {
             file_put_contents($cartFilename, json_encode($data));
-        } else if (file_exists($cartFilename)) {
+        } elseif (file_exists($cartFilename)) {
             unlink($cartFilename);
         }
     }
