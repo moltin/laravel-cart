@@ -63,7 +63,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function insertUpdate(Item $item)
     {
-        static::$cart[$this->id][$item->identifier] = $item;
+        static::$cart[$item->identifier] = $item;
 
         $this->saveCart();
     }
@@ -76,7 +76,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function &data($asArray = false)
     {
-        $cart =& static::$cart[$this->id];
+        $cart =& static::$cart;
 
         if ( ! $asArray) {
             return $cart;
@@ -100,7 +100,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function has($identifier)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        foreach (static::$cart as $item) {
             if ($item->identifier == $identifier) {
                 return true;
             }
@@ -117,7 +117,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function item($identifier)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        foreach (static::$cart as $item) {
             if ($item->identifier == $identifier) {
                 return $item;
             }
@@ -134,7 +134,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function find($id)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        foreach (static::$cart as $item) {
             if ($item->id == $id) {
                 return $item;
             }
@@ -151,7 +151,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function remove($id)
     {
-        unset(static::$cart[$this->id][$id]);
+        unset(static::$cart[$id]);
 
         $this->saveCart();
     }
@@ -163,7 +163,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function destroy()
     {
-        static::$cart[$this->id] = array();
+        static::$cart = array();
 
         $this->saveCart();
     }
@@ -173,11 +173,12 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      *
      * @param string $identifier
      */
-    public function setIdentifier($id)
+    public function setIdentifier($identifier)
     {
-        $this->id = $id;
-        if ( ! array_key_exists($this->id, (array)static::$cart)) {
-            static::$cart[$this->id] = array();
+        $this->identifier = $identifier;
+
+        if ( ! array_key_exists($this->identifier, (array)static::$cart)) {
+            static::$cart = array();
         }
 
         $this->saveCart();
