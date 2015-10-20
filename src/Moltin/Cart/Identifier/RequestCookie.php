@@ -28,7 +28,7 @@ class RequestCookie extends Cookie
 
         if($identifierRequest)
         {
-            setcookie('cart_identifier', $identifierRequest, 0, "/");
+            setcookie('cart_identifier', $identifierRequest, 0, '/', Config::get('session.domain'));
         }
         else
         {

@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Config;
 use Moltin\Cart\Storage\LaravelSession as SessionStore;
 use Moltin\Cart\Storage\LaravelCache as CacheStore;
 use Moltin\Cart\Storage\LaravelFile as FileStore;
-use Moltin\Cart\Identifier\Cookie as CookieIdentifier;
+use Moltin\Cart\Identifier\LaravelCookie as CookieIdentifier;
 use Moltin\Cart\Identifier\RequestCookie as CookieRequestIdentifier;
 
 class CartServiceProvider extends ServiceProvider
