@@ -208,7 +208,7 @@ class LaravelCache implements \Moltin\Cart\LaravelStorageInterface
      *
      * @return void
      */
-    protected function fireEvent($event, $payload = array())
+    public function fireEvent($event, $payload = array())
     {
         Event::fire($event, $payload);
     }

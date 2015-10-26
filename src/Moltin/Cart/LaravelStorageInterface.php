@@ -20,5 +20,5 @@ interface LaravelStorageInterface extends StorageInterface
      *
      * @return void
      */
-    function fireEvent($event, $payload = array());
+    public function fireEvent($event, $payload = array());
 }
