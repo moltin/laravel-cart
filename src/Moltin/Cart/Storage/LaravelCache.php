@@ -7,10 +7,11 @@
 
 use Moltin\Cart\Item;
 use Moltin\Cart\Storage;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache as LaravelCacheStorage;
 
-class LaravelCache implements \Moltin\Cart\StorageInterface
+class LaravelCache implements \Moltin\Cart\LaravelStorageInterface
 {
     private $cachePrefix;
 
@@ -45,6 +46,8 @@ class LaravelCache implements \Moltin\Cart\StorageInterface
         static::$cart[$this->id][$item->identifier] = $item;
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.insert-update', $item->toArray());
     }
 
     /**
@@ -131,6 +134,8 @@ class LaravelCache implements \Moltin\Cart\StorageInterface
         unset(static::$cart[$this->id][$id]);
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.remove', $id);
     }
 
     /**
@@ -143,7 +148,9 @@ class LaravelCache implements \Moltin\Cart\StorageInterface
         static::$cart[$this->id] = array();
 
         $this->saveCart();
-    }
+
+        $this->fireEvent('cart.destroy');
+     }
 
     /**
      * Set the cart identifier
@@ -186,5 +193,17 @@ class LaravelCache implements \Moltin\Cart\StorageInterface
         {
             LaravelCacheStorage::put($cacheID, $data, $expires);
         }
+
+        $this->fireEvent('cart.save', $data->toArray());
+    }
+
+    /**
+     * Fire an event using the Laravel event class
+     *
+     * @return void
+     */
+    protected function fireEvent($event, $payload = array())
+    {
+        Event::fire($event, $payload);
     }
 }

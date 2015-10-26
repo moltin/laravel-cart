@@ -21,9 +21,10 @@
 namespace Moltin\Cart\Storage;
 
 use Moltin\Cart\Item;
+use Illuminate\Support\Facades\Event;
 use Session;
 
-class LaravelSession implements \Moltin\Cart\StorageInterface
+class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 {
     protected $identifier;
     protected static $cart = array();
@@ -37,7 +38,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Add or update an item in the cart
-     * 
+     *
      * @param  Item   $item The item to insert or update
      * @return void
      */
@@ -46,11 +47,13 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
         static::$cart[$this->id][$item->identifier] = $item;
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.insert-update', $item->toArray());
     }
 
     /**
      * Retrieve the cart data
-     * 
+     *
      * @return array
      */
     public function &data($asArray = false)
@@ -70,7 +73,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Check if the item exists in the cart
-     * 
+     *
      * @param  mixed  $id
      * @return boolean
      */
@@ -87,7 +90,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Get a single cart item by id
-     * 
+     *
      * @param  mixed $id The item id
      * @return Item  The item class
      */
@@ -104,7 +107,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Returns the first occurance of an item with a given id
-     * 
+     *
      * @param  string $id The item id
      * @return Item       Item object
      */
@@ -118,10 +121,10 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
         return false;
     }
-    
+
     /**
      * Remove an item from the cart
-     * 
+     *
      * @param  mixed $id
      * @return void
      */
@@ -130,11 +133,13 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
         unset(static::$cart[$this->id][$id]);
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.remove', $id);
     }
 
     /**
      * Destroy the cart
-     * 
+     *
      * @return void
      */
     public function destroy()
@@ -142,11 +147,13 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
         static::$cart[$this->id] = array();
 
         $this->saveCart();
+
+        $this->fireEvent('cart.destroy');
     }
 
     /**
      * Set the cart identifier
-     * 
+     *
      * @param string $identifier
      */
     public function setIdentifier($id)
@@ -162,7 +169,7 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
 
     /**
      * Return the current cart identifier
-     * 
+     *
      * @return void
      */
     public function getIdentifier()
@@ -175,5 +182,17 @@ class LaravelSession implements \Moltin\Cart\StorageInterface
         $data = static::$cart;
 
         Session::put('cart', $data);
+
+        $this->fireEvent('cart.save', $data->toArray());
+    }
+
+    /**
+     * Fire an event using the Laravel event class
+     *
+     * @return void
+     */
+    protected function fireEvent($event, $payload = array())
+    {
+        Event::fire($event, $payload);
     }
 }
