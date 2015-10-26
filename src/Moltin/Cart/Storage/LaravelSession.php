@@ -189,7 +189,7 @@ class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 
         unset($item);
 
-        $this->fireEvent('cart.save', $data->toArray());
+        $this->fireEvent('cart.save', $data);
     }
 
     /**
