@@ -183,6 +183,12 @@ class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 
         Session::put('cart', $data);
 
+        foreach ($data as &$item) {
+            $item = $item->toArray();
+        }
+
+        unset($item);
+
         $this->fireEvent('cart.save', $data->toArray());
     }
 

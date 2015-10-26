@@ -194,6 +194,12 @@ class LaravelCache implements \Moltin\Cart\LaravelStorageInterface
             LaravelCacheStorage::put($cacheID, $data, $expires);
         }
 
+        foreach ($data as &$item) {
+            $item = $item->toArray();
+        }
+
+        unset($item);
+
         $this->fireEvent('cart.save', $data->toArray());
     }
 

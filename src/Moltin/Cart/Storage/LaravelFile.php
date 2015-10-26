@@ -216,6 +216,12 @@ class LaravelFile implements \Moltin\Cart\LaravelStorageInterface
             unlink($cartFilename);
         }
 
+        foreach ($data as &$item) {
+            $item = $item->toArray();
+        }
+
+        unset($item);
+
         $this->fireEvent('cart.save', $data->toArray());
     }
 
