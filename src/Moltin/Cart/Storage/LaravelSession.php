@@ -48,7 +48,7 @@ class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 
         $this->saveCart();
 
-        $this->fireEvent('cart.item.insert-update', $item->toArray());
+        $this->fireEvent('cart.item.insert-update', ["item" => $item->toArray()]);
     }
 
     /**
@@ -134,7 +134,7 @@ class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 
         $this->saveCart();
 
-        $this->fireEvent('cart.item.remove', $id);
+        $this->fireEvent('cart.item.remove', ["item_identifier" => $id]);
     }
 
     /**
@@ -189,7 +189,9 @@ class LaravelSession implements \Moltin\Cart\LaravelStorageInterface
 
         unset($item);
 
-        $this->fireEvent('cart.save', $data);
+        $this->fireEvent('cart.save', [
+            "cart" => $data,
+        ]);
     }
 
     /**
