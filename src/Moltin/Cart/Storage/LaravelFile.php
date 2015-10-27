@@ -34,6 +34,11 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         }
     }
 
+    public function __destruct()
+    {
+        $this->saveCart();
+    }
+
     /**
      * @param $identifier
      */
