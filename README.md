@@ -5,9 +5,12 @@ Laravel Facade and Service Provider for Moltin\Cart
 
 Installation
 ---
+via Composer:
+```
+$ composer require moltin/laravel-cart
+```
 
-To use, simply install the package via Composer and then add the following to your app/config/app.php to the service providers array:
-
+Add the following to your app/config/app.php to the service providers array:
 ```php
 'Moltin\Cart\CartServiceProvider',
 ```
