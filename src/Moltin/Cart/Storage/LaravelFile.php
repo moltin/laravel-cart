@@ -34,24 +34,25 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         }
     }
 
+    public function __destruct()
+    {
+        $this->saveCart();
+    }
+
     /**
      * @param $identifier
      */
     public function restore($identifier)
     {
         $contents = null;
-        $cartFilename = $this->storagePath . '/' . $identifier . '.json';
+        $cartFilename = $this->storagePath . '/' . $identifier;
 
         if (file_exists($cartFilename)) {
             $contents = file_get_contents($cartFilename);
         }
 
         if ( ! empty($contents)) {
-            $contents = json_decode($contents, true);
-        }
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            static::$cart = $contents;
+            static::$cart = unserialize($contents);
         }
     }
 
@@ -63,7 +64,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function insertUpdate(Item $item)
     {
-        static::$cart[$this->id][$item->identifier] = $item;
+        static::$cart[$item->identifier] = $item;
 
         $this->saveCart();
     }
@@ -76,7 +77,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function &data($asArray = false)
     {
-        $cart =& static::$cart[$this->id];
+        $cart =& static::$cart;
 
         if ( ! $asArray) {
             return $cart;
@@ -100,7 +101,9 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function has($identifier)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        $data = static::$cart;
+
+        foreach ($data as $item) {
             if ($item->identifier == $identifier) {
                 return true;
             }
@@ -117,7 +120,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function item($identifier)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        foreach (static::$cart as $item) {
             if ($item->identifier == $identifier) {
                 return $item;
             }
@@ -134,7 +137,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function find($id)
     {
-        foreach (static::$cart[$this->id] as $item) {
+        foreach (static::$cart as $item) {
             if ($item->id == $id) {
                 return $item;
             }
@@ -151,7 +154,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function remove($id)
     {
-        unset(static::$cart[$this->id][$id]);
+        unset(static::$cart[$id]);
 
         $this->saveCart();
     }
@@ -163,7 +166,7 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      */
     public function destroy()
     {
-        static::$cart[$this->id] = array();
+        static::$cart = array();
 
         $this->saveCart();
     }
@@ -173,12 +176,11 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
      *
      * @param string $identifier
      */
-    public function setIdentifier($id)
+    public function setIdentifier($identifier)
     {
-        $this->id = $id;
-        if ( ! array_key_exists($this->id, (array)static::$cart)) {
-            static::$cart[$this->id] = array();
-        }
+        $this->identifier = $identifier;
+
+        // Session::put("cart_identifier", $identifier);
 
         $this->saveCart();
     }
@@ -201,12 +203,10 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
     protected function saveCart()
     {
         $data = static::$cart;
-        $cartFilename = $this->storagePath . '/' . $this->identifier . '.json';
+        $cartFilename = $this->storagePath . '/' . $this->identifier;
 
         if ( ! empty($data)) {
-            file_put_contents($cartFilename, json_encode($data));
-        } elseif (file_exists($cartFilename)) {
-            unlink($cartFilename);
+            file_put_contents($cartFilename, serialize($data));
         }
     }
 }
