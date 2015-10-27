@@ -14,9 +14,10 @@ namespace Moltin\Cart\Storage;
 
 use Moltin\Cart\Item;
 use Moltin\Cart\Storage;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 
-class LaravelFile implements \Moltin\Cart\StorageInterface
+class LaravelFile implements \Moltin\Cart\LaravelStorageInterface
 {
     protected $storagePath;
 
@@ -67,6 +68,8 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         static::$cart[$item->identifier] = $item;
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.insert-update', ["item" => $item->toArray()]);
     }
 
     /**
@@ -157,6 +160,8 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         unset(static::$cart[$id]);
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.remove', ["item_identifier" => $id]);
     }
 
     /**
@@ -169,6 +174,8 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         static::$cart = array();
 
         $this->saveCart();
+
+        $this->fireEvent('cart.item.remove');
     }
 
     /**
@@ -208,5 +215,25 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         if ( ! empty($data)) {
             file_put_contents($cartFilename, serialize($data));
         }
+
+        foreach ($data as &$item) {
+            $item = $item->toArray();
+        }
+
+        unset($item);
+
+        $this->fireEvent('cart.save', [
+            "cart" => $data,
+        ]);
+    }
+
+    /**
+     * Fire an event using the Laravel event class
+     *
+     * @return void
+     */
+    public function fireEvent($event, $payload = array())
+    {
+        Event::fire($event, $payload);
     }
 }
