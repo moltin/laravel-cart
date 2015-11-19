@@ -17,7 +17,7 @@ use Moltin\Cart\Storage;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 
-class LaravelFile implements \Moltin\Cart\LaravelStorageInterface
+class LaravelFile implements \Moltin\Cart\StorageInterface
 {
     protected $storagePath;
 
