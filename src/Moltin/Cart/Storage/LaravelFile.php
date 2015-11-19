@@ -210,11 +210,7 @@ class LaravelFile implements \Moltin\Cart\LaravelStorageInterface
         $data = static::$cart;
         $cartFilename = $this->storagePath . '/' . $this->identifier . '.json';
 
-        if ( ! empty($data)) {
-            file_put_contents($cartFilename, json_encode($data));
-        } elseif (file_exists($cartFilename)) {
-            unlink($cartFilename);
-        }
+        file_put_contents($cartFilename, json_encode($data));
 
         foreach ($data as &$item) {
             $item = $item->toArray();
