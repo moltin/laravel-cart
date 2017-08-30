@@ -1,3 +1,5 @@
+**THIS REPO IS DEPRECATED AND SCHEDULED FOR DELETION ON September 15th 2017**
+
 Laravel Shopping Cart Package
 ============
 
