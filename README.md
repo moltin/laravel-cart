@@ -1,4 +1,4 @@
-**THIS REPO IS DEPRECATED AND SCHEDULED FOR DELETION ON September 15th 2017**
+**THIS REPO IS BEING CONSIDERED FOR OWNERSHIP TRANSFER, PLEASE SE HERE: https://github.com/moltin/laravel-cart/issues/62#issuecomment-328447136**
 
 Laravel Shopping Cart Package
 ============
