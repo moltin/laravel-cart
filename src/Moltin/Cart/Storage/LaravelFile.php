@@ -205,8 +205,6 @@ class LaravelFile implements \Moltin\Cart\StorageInterface
         $data = static::$cart;
         $cartFilename = $this->storagePath . '/' . $this->identifier;
 
-        if ( ! empty($data)) {
-            file_put_contents($cartFilename, serialize($data));
-        }
+        file_put_contents($cartFilename, serialize($data));
     }
 }
