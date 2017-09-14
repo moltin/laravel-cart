@@ -25,6 +25,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Config;
 
 use Moltin\Cart\Storage\LaravelSession as SessionStore;
+use Moltin\Cart\Storage\Session as MoltinSessionStore;
 use Moltin\Cart\Storage\LaravelCache as CacheStore;
 use Moltin\Cart\Storage\LaravelFile as FileStore;
 use Moltin\Cart\Identifier\Cookie as CookieIdentifier;
@@ -38,6 +39,10 @@ class CartServiceProvider extends ServiceProvider
         switch ($class) {
             case 'session':
                 return new SessionStore;
+            break;
+            
+            case 'moltinSession':
+                return new MoltinSessionStore;
             break;
 
             case 'cache':
