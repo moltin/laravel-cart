@@ -40,7 +40,7 @@ Cart::insert($items);
 dd(Cart::totalItems());
 ```
 
-###Config settings (Optional)
+### Config settings (Optional)
 Publish the config file with `php artisan vendor:publish`
 ```php
 
@@ -61,7 +61,7 @@ return array(
     // If there is no request, the cookie will be loaded.
     'identifier' => 'cookie', //cookie, requestcookie
 
-    //Request Cookie
+    // Request Cookie
     'requestid' => 'CartID', //http input request identifier, example: your customer/backoffice could reload the cart in your shop controller, /public/shop?CartID=871f0bc18ca76e68bf7c3adf8f9426ef
 );
 ```
